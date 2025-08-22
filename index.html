@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union (Swahwa) | Class Management</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Inksphere/Swahwa/main/10149443.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+            --light: #eff6ff;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary) 0%, #1e40af 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 40px 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--accent);
+        }
+        
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: white;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--primary);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover {
+            background-color: var(--light);
+        }
+        
+        .header-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            background-color: var(--light);
+        }
+        
+        .user-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--light);
+        }
+        
+        .user-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-info h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .user-info p {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Content Container */
+        .content-container {
+            padding: 30px;
+        }
+        
+        /* Section Styles */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .card-icon.blue {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--secondary);
+        }
+        
+        .card-icon.green {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        .card-icon.red {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+        
+        .card-icon.purple {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+        }
+        
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+        
+        .card-change {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .card-change.positive {
+            color: var(--success);
+        }
+        
+        .card-change.negative {
+            color: var(--danger);
+        }
+        
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .section-action {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background-color: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent);
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--light);
+            color: var(--secondary);
+        }
+        
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table th, .data-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .data-table th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f7fafc;
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        /* Bulk Add Section */
+        .bulk-add-container {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .bulk-add-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .bulk-add-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        /* Money Section */
+        .money-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .money-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        .balance-display {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .balance-label {
+            font-size: 16px;
+            color: var(--gray);
+        }
+        
+        /* Help Section */
+        .help-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .help-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .help-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--light);
+            color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .help-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .help-text {
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        /* Logout Section */
+        .logout-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .logout-icon {
+            width: 100px;
+            height: 100px;
+            background-color: var(--light);
+            color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+        
+        .logout-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .logout-text {
+            font-size: 16px;
+            color: var(--gray);
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .money-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-right {
+                gap: 15px;
+            }
+            
+            .user-info {
+                display: none;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .content-container {
+                padding: 20px;
+            }
+            
+            .bulk-add-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .data-table {
+                font-size: 14px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 10px 8px;
+            }
+        }
+        
+        /* Custom styles for dashboard elements */
+        .status-bar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        
+        .connection-status.connected {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .connection-status.disconnected {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .connection-status.testing {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+        
+        .transaction-filters {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .bulk-add-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .bulk-section {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+        }
+        
+        .bulk-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .bulk-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 100px 40px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .bulk-row:hover {
+            border-color: var(--light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .bulk-row.completed {
+            background-color: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .ad-no-input,
+        .item-select,
+        .custom-item-input,
+        .amount-input {
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .ad-no-input:focus,
+        .item-select:focus,
+        .custom-item-input:focus,
+        .amount-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .custom-item-input {
+            display: none;
+        }
+        
+        .remove-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 8px 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            background-color: #dc2626;
+        }
+        
+        .bulk-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            color: var(--dark);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pagination button:hover {
+            background-color: var(--light);
+        }
+        
+        .pagination button.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+        
+        .error-message {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .success-message {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .warning-message {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .bulk-message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        .bulk-message.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        
+        .bulk-message.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .bulk-message.info {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--secondary);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .auto-add-indicator {
+            position: absolute;
+            right: -5px;
+            top: -5px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .bulk-row.new-row .auto-add-indicator {
+            opacity: 1;
+            animation: pulse 1s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Union</h1>
+                    <p>Swahwa Class</p>
+                </div>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="#" class="menu-link active" data-section="home"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" class="menu-link" data-section="credit-total"><i class="fas fa-arrow-up"></i> Credit Total</a></li>
+            <li><a href="#" class="menu-link" data-section="debit-total"><i class="fas fa-arrow-down"></i> Debit Total</a></li>
+            <li><a href="#" class="menu-link" data-section="bulk-add"><i class="fas fa-plus-circle"></i> Bulk Add</a></li>
+            <li><a href="#" class="menu-link" data-section="transactions"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+            <li><a href="#" class="menu-link" data-section="money"><i class="fas fa-money-bill-wave"></i> Money</a></li>
+            <li><a href="#" class="menu-link" data-section="help"><i class="fas fa-question-circle"></i> Help</a></li>
+            <li><a href="#" class="menu-link" data-section="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <h2 id="pageTitle">Dashboard</h2>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="user-info">
+                        <h3>Admin</h3>
+                        <p>Class Administrator</p>
+                    </div>
+                    <div class="user-img">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80" alt="User">
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Container -->
+        <div class="content-container">
+            <!-- Home Section -->
+            <div class="content-section active" id="home">
+                <div id="connection-status" class="connection-status disconnected">
+                    <span>🔄 Connecting to your Google Apps Script...</span>
+                </div>
+                
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span id="app-status" class="loading">🔄 Loading...</span>
+                    </div>
+                    <div class="status-item">
+                        <span id="last-updated">Last Updated: Never</span>
+                    </div>
+                    <div class="status-item">
+                        <button onclick="refreshAllData()" class="btn">
+                            <i class="fas fa-sync-alt"></i> Refresh Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Total Credits</div>
+                            <div class="card-icon green">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">₹<span id="creditAmount">Loading...</span></div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12% from last month</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Total Debits</div>
+                            <div class="card-icon red">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">₹<span id="debitAmount">Loading...</span></div>
+                        <div class="card-change negative">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>5% from last month</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Net Balance</div>
+                            <div class="card-icon blue">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">₹<span id="balanceAmount">Loading...</span></div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>18% from last month</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Transactions</div>
+                            <div class="card-icon purple">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                        </div>
+                        <div class="card-value"><span id="transactionCount">Loading...</span></div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8% from last month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-header">
+                    <h3 class="section-title">Recent Transactions</h3>
+                    <div class="section-action">
+                        <button class="btn btn-outline" onclick="exportOverallToPDF()">
+                            <i class="fas fa-file-pdf"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="recent-transactions-container">
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        Loading recent transactions...
+                    </div>
+                </div>
+                
+                <div id="errorMessage" style="display: none;"></div>
+            </div>
+            
+            <!-- Credit Total Section -->
+            <div class="content-section" id="credit-total">
+                <div class="section-header">
+                    <h3 class="section-title">Credit Transactions</h3>
+                    <div class="section-action">
+                        <button class="btn" onclick="exportCreditToPDF()">
+                            <i class="fas fa-file-pdf"></i> Export Credit
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="user-selector">
+                    <div class="form-group">
+                        <label for="creditUsernameInput">Select User:</label>
+                        <input type="text" id="creditUsernameInput" class="form-control" placeholder="Enter username">
+                    </div>
+                    <button class="btn" onclick="loadCreditData()">
+                        <i class="fas fa-search"></i> Load Credit Data
+                    </button>
+                </div>
+                
+                <div id="creditUserInfo" class="success-message" style="display: none;">
+                    <strong>Viewing credit data for:</strong> <span id="creditUsername"></span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Credits</div>
+                        <div class="card-icon green">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">₹<span id="creditTotalAmount">0.00</span></div>
+                </div>
+                
+                <div id="creditTransactionsContainer">
+                    <div class="no-data">Enter a username to view credit transactions</div>
+                </div>
+                
+                <div id="creditErrorMessage" style="display: none;"></div>
+            </div>
+            
+            <!-- Debit Total Section -->
+            <div class="content-section" id="debit-total">
+                <div class="section-header">
+                    <h3 class="section-title">Debit Transactions</h3>
+                    <div class="section-action">
+                        <button class="btn" onclick="exportDebitToPDF()">
+                            <i class="fas fa-file-pdf"></i> Export Debit
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="user-selector">
+                    <div class="form-group">
+                        <label for="debitUsernameInput">Select User:</label>
+                        <input type="text" id="debitUsernameInput" class="form-control" placeholder="Enter username">
+                    </div>
+                    <button class="btn" onclick="loadDebitData()">
+                        <i class="fas fa-search"></i> Load Debit Data
+                    </button>
+                </div>
+                
+                <div id="debitUserInfo" class="success-message" style="display: none;">
+                    <strong>Viewing debit data for:</strong> <span id="debitUsername"></span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Debits</div>
+                        <div class="card-icon red">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </div>
+                    <div class="card-value">₹<span id="debitTotalAmount">0.00</span></div>
+                </div>
+                
+                <div id="debitTransactionsContainer">
+                    <div class="no-data">Enter a username to view debit transactions</div>
+                </div>
+                
+                <div id="debitErrorMessage" style="display: none;"></div>
+            </div>
+            
+            <!-- Bulk Add Section -->
+            <div class="content-section" id="bulk-add">
+                <div class="section-header">
+                    <h3 class="section-title">Bulk Add Transactions</h3>
+                </div>
+                
+                <div class="bulk-add-grid">
+                    <!-- Credit Bulk Add Section -->
+                    <div class="bulk-section">
+                        <h3>Credit Bulk Add</h3>
+                        <div class="bulk-form" id="creditBulkForm">
+                            <div class="bulk-row">
+                                <input type="text" class="ad-no-input" placeholder="AD.NO">
+                                <select class="item-select" onchange="toggleCustomInput(this)">
+                                    <option value="">Select Item</option>
+                                    <option value="item1">Item 1</option>
+                                    <option value="item2">Item 2</option>
+                                    <option value="item3">Item 3</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="text" class="custom-item-input" placeholder="Enter custom item">
+                                <input type="number" class="amount-input" placeholder="Amount">
+                                <button class="remove-btn" onclick="removeRow(this)">×</button>
+                                <div class="auto-add-indicator">+</div>
+                            </div>
+                        </div>
+                        <div class="bulk-actions">
+                            <button class="btn btn-outline" onclick="addRow('creditBulkForm')">
+                                <i class="fas fa-plus"></i> Add Row
+                            </button>
+                            <button class="btn" onclick="submitBulk('credit')">
+                                <i class="fas fa-check"></i> Submit Credit
+                            </button>
+                        </div>
+                        <div class="bulk-message" id="creditBulkMessage"></div>
+                    </div>
+                    
+                    <!-- Debit Bulk Add Section -->
+                    <div class="bulk-section">
+                        <h3>Debit Bulk Add</h3>
+                        <div class="bulk-form" id="debitBulkForm">
+                            <div class="bulk-row">
+                                <input type="text" class="ad-no-input" placeholder="AD.NO">
+                                <select class="item-select" onchange="toggleCustomInput(this)">
+                                    <option value="">Select Item</option>
+                                    <option value="item1">Item 1</option>
+                                    <option value="item2">Item 2</option>
+                                    <option value="item3">Item 3</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="text" class="custom-item-input" placeholder="Enter custom item">
+                                <input type="number" class="amount-input" placeholder="Amount">
+                                <button class="remove-btn" onclick="removeRow(this)">×</button>
+                                <div class="auto-add-indicator">+</div>
+                            </div>
+                        </div>
+                        <div class="bulk-actions">
+                            <button class="btn btn-outline" onclick="addRow('debitBulkForm')">
+                                <i class="fas fa-plus"></i> Add Row
+                            </button>
+                            <button class="btn" onclick="submitBulk('debit')">
+                                <i class="fas fa-check"></i> Submit Debit
+                            </button>
+                        </div>
+                        <div class="bulk-message" id="debitBulkMessage"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transactions Section -->
+            <div class="content-section" id="transactions">
+                <div class="section-header">
+                    <h3 class="section-title">All Transactions</h3>
+                    <div class="section-action">
+                        <button class="btn" onclick="exportTransactionsToPDF()">
+                            <i class="fas fa-file-pdf"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="transaction-filters">
+                    <div class="filter-group">
+                        <label for="transactionTypeFilter">Type:</label>
+                        <select id="transactionTypeFilter" class="form-control" onchange="filterTransactions()">
+                            <option value="all">All Types</option>
+                            <option value="credit">Credit</option>
+                            <option value="debit">Debit</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="transactionUserFilter">User:</label>
+                        <input type="text" id="transactionUserFilter" class="form-control" placeholder="Filter by username" onchange="filterTransactions()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFromFilter">From:</label>
+                        <input type="date" id="dateFromFilter" class="form-control" onchange="filterTransactions()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateToFilter">To:</label>
+                        <input type="date" id="dateToFilter" class="form-control" onchange="filterTransactions()">
+                    </div>
+                    <div class="filter-group">
+                        <button class="btn" onclick="loadTransactions()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="transactionsLoading" class="loading">
+                    <div class="loading-spinner"></div>
+                    Loading transactions...
+                </div>
+                
+                <div id="transactionsTableContainer" style="display: none;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Username</th>
+                                <th>Type</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <!-- Transactions will be loaded here -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="pagination" id="transactionsPagination">
+                        <!-- Pagination will be added here -->
+                    </div>
+                </div>
+                
+                <div id="transactionsError" style="display: none;"></div>
+            </div>
+            
+            <!-- Money Section -->
+            <div class="content-section" id="money">
+                <div class="section-header">
+                    <h3 class="section-title">Money Management</h3>
+                </div>
+                
+                <div class="money-container">
+                    <div class="money-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Current Balance</h3>
+                        </div>
+                        <div class="balance-display">
+                            <div class="balance-amount">₹<span id="currentBalance">4,130</span></div>
+                            <div class="balance-label">Available Balance</div>
+                        </div>
+                        <div class="section-action">
+                            <button class="btn" onclick="showAddMoneyForm()">
+                                <i class="fas fa-plus"></i> Add Money
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-minus"></i> Withdraw
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="money-card" id="addMoneyForm" style="display: none;">
+                        <div class="section-header">
+                            <h3 class="section-title">Add Money</h3>
+                        </div>
+                        <form onsubmit="addMoney(event)">
+                            <div class="form-group">
+                                <label for="addAmount">Amount</label>
+                                <input type="number" id="addAmount" class="form-control" placeholder="Enter amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDescription">Description</label>
+                                <input type="text" id="addDescription" class="form-control" placeholder="Enter description" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDate">Date</label>
+                                <input type="date" id="addDate" class="form-control" required>
+                            </div>
+                            <div class="section-action">
+                                <button type="submit" class="btn">
+                                    <i class="fas fa-check"></i> Add Money
+                                </button>
+                                <button type="button" class="btn btn-outline" onclick="hideAddMoneyForm()">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Section -->
+            <div class="content-section" id="help">
+                <div class="section-header">
+                    <h3 class="section-title">Help & Support</h3>
+                </div>
+                
+                <div class="help-container">
+                    <div class="help-card">
+                        <div class="help-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h4 class="help-title">User Guide</h4>
+                        <p class="help-text">Learn how to use all features of the Union (Swahwa) Class Management system.</p>
+                        <button class="btn" onclick="window.open('help.html', '_blank')">
+                            <i class="fas fa-external-link-alt"></i> Read Guide
+                        </button>
+                    </div>
+                    
+                    <div class="help-card">
+                        <div class="help-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h4 class="help-title">FAQs</h4>
+                        <p class="help-text">Find answers to frequently asked questions about the system.</p>
+                        <button class="btn" onclick="showFAQs()">
+                            <i class="fas fa-list"></i> View FAQs
+                        </button>
+                    </div>
+                    
+                    <div class="help-card">
+                        <div class="help-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4 class="help-title">Contact Support</h4>
+                        <p class="help-text">Get in touch with our support team for personalized assistance.</p>
+                        <button class="btn" onclick="window.open('help.html', '_blank')">
+                            <i class="fas fa-envelope"></i> Contact Us
+                        </button>
+                    </div>
+                    
+                    <div class="help-card">
+                        <div class="help-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h4 class="help-title">Video Tutorials</h4>
+                        <p class="help-text">Watch step-by-step video tutorials for using the system.</p>
+                        <button class="btn" onclick="showTutorials()">
+                            <i class="fas fa-play-circle"></i> Watch Tutorials
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logout Section -->
+            <div class="content-section" id="logout">
+                <div class="logout-container">
+                    <div class="logout-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <h2 class="logout-title">Logout</h2>
+                    <p class="logout-text">Are you sure you want to logout? Any unsaved changes will be lost.</p>
+                    <div class="section-action">
+                        <button class="btn" id="confirmLogout">
+                            <i class="fas fa-check"></i> Yes, Logout
+                        </button>
+                        <button class="btn btn-outline" id="cancelLogout">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        // Global variables to store API URLs
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwJVSzLvUzyPR13jeN3rU26E9eCdP0UZEE6Bx0eXf1L2MxrlAwfjqoVCELxnJ5QZR4l/exec';
+        
+        // Transactions data storage
+        let allTransactions = [];
+        let filteredTransactions = [];
+        let currentPage = 1;
+        const transactionsPerPage = 20;
+        
+        // Toggle sidebar
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Menu navigation
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const contentSections = document.querySelectorAll('.content-section');
+        const pageTitle = document.getElementById('pageTitle');
+        
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                menuLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Get the section to show
+                const sectionId = this.getAttribute('data-section');
+                const section = document.getElementById(sectionId);
+                
+                if (section) {
+                    section.classList.add('active');
+                    
+                    // Update page title
+                    const sectionTitle = this.textContent.trim();
+                    pageTitle.textContent = sectionTitle;
+                }
+                
+                // Load transactions if transactions section is selected
+                if (sectionId === 'transactions' && allTransactions.length === 0) {
+                    loadTransactions();
+                }
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 992) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
+            });
+        });
+        
+        // Logout functionality
+        document.getElementById('confirmLogout').addEventListener('click', function() {
+            window.location.href = "index.html";
+        });
+        
+        document.getElementById('cancelLogout').addEventListener('click', function() {
+            // Navigate back to home
+            document.querySelector('[data-section="home"]').click();
+        });
+        
+        // Form submissions (prevent default for demo)
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Form submitted successfully! (This is a demo)');
+            });
+        });
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date filters
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('dateFromFilter').value = thirtyDaysAgo.toISOString().split('T')[0];
+            document.getElementById('dateToFilter').value = today.toISOString().split('T')[0];
+            
+            // Test connection and load data
+            testConnection();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(() => {
+                if (!appData.loading) {
+                    refreshAllData();
+                }
+            }, 5 * 60 * 1000);
+            
+            // Setup initial bulk row listeners
+            setupBulkRowListeners(document.querySelector('#creditBulkForm .bulk-row'));
+            setupBulkRowListeners(document.querySelector('#debitBulkForm .bulk-row'));
+        });
+        
+        // Global data storage
+        let appData = {
+            allTotals: { totalCredit: 0, totalDebit: 0, balance: 0 },
+            allTransactions: [],
+            filteredTransactions: [],
+            monthlyData: {},
+            userLedger: [],
+            lastUpdated: null,
+            loading: false,
+            cache: new Map(),
+            debugInfo: []
+        };
+        
+        // Show connection status
+        function updateConnectionStatus(status, message) {
+            const statusDiv = document.getElementById('connection-status');
+            statusDiv.className = `connection-status ${status}`;
+            statusDiv.innerHTML = `<span>${message}</span>`;
+            
+            const appStatus = document.getElementById('app-status');
+            if (status === 'connected') {
+                appStatus.textContent = '✅ Connected';
+                appStatus.className = 'loaded';
+            } else if (status === 'testing') {
+                appStatus.textContent = '🔄 Testing...';
+                appStatus.className = 'loading';
+            } else {
+                appStatus.textContent = '❌ Disconnected';
+                appStatus.className = 'loading';
+            }
+        }
+        
+        // Test connection to your Apps Script
+        async function testConnection() {
+            updateConnectionStatus('testing', '🔄 Testing connection to your Google Apps Script...');
+            
+            try {
+                const testUrl = new URL(API_URL);
+                testUrl.searchParams.append('action', 'ping');
+                
+                const response = await fetch(testUrl.toString(), {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                updateConnectionStatus('connected', '✅ Successfully connected to your Google Apps Script!');
+                
+                // Auto-load data after successful connection
+                setTimeout(refreshAllData, 1000);
+                
+                return true;
+                
+            } catch (error) {
+                let errorMessage = '❌ Connection failed: ' + error.message;
+                updateConnectionStatus('disconnected', errorMessage);
+                return false;
+            }
+        }
+        
+        // API call function
+        async function apiCall(action, params = {}) {
+            if (!API_URL) {
+                throw new Error('Google Apps Script URL not configured');
+            }
+            
+            let lastError;
+            
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                try {
+                    const url = new URL(API_URL);
+                    url.searchParams.append('action', action);
+                    
+                    Object.keys(params).forEach(key => {
+                        if (params[key] !== null && params[key] !== undefined) {
+                            url.searchParams.append(key, params[key]);
+                        }
+                    });
+                    
+                    const response = await fetch(url.toString(), {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    
+                    return data;
+                    
+                } catch (error) {
+                    lastError = error;
+                    
+                    if (attempt < 3) {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                    }
+                }
+            }
+            
+            throw lastError;
+        }
+        
+        // Load all data
+        async function refreshAllData() {
+            if (appData.loading) {
+                return;
+            }
+            
+            appData.loading = true;
+            updateConnectionStatus('testing', '🔄 Loading data from your Google Apps Script...');
+            
+            try {
+                // Load data in parallel
+                const [totalsResult, transactionsResult] = await Promise.all([
+                    apiCall('get_all_totals').catch(err => ({ error: err.message })),
+                    apiCall('get_all_transactions').catch(err => ({ error: err.message }))
+                ]);
+                
+                // Process results
+                if (!totalsResult.error) {
+                    appData.allTotals = totalsResult;
+                    updateDashboardCards();
+                }
+                
+                if (!transactionsResult.error) {
+                    appData.allTransactions = transactionsResult.transactions || [];
+                    appData.filteredTransactions = [...appData.allTransactions];
+                    updateRecentTransactions();
+                }
+                
+                appData.lastUpdated = new Date();
+                document.getElementById('last-updated').textContent = 
+                    `Last Updated: ${appData.lastUpdated.toLocaleString()}`;
+                
+                updateConnectionStatus('connected', '✅ Data loaded successfully from your Google Apps Script!');
+                
+            } catch (error) {
+                updateConnectionStatus('disconnected', '❌ Failed to load data: ' + error.message);
+            } finally {
+                appData.loading = false;
+            }
+        }
+        
+        // Update dashboard cards
+        function updateDashboardCards() {
+            const { totalCredit, totalDebit, balance } = appData.allTotals;
+            
+            document.getElementById("creditAmount").textContent = totalCredit.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById("debitAmount").textContent = totalDebit.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById("balanceAmount").textContent = balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById("transactionCount").textContent = appData.allTransactions.length;
+            
+            // Update balance box styling based on positive/negative
+            const balanceBox = document.querySelector('#home .card:nth-child(3)');
+            if (balanceBox) {
+                const cardChange = balanceBox.querySelector('.card-change');
+                if (balance >= 0) {
+                    cardChange.className = 'card-change positive';
+                } else {
+                    cardChange.className = 'card-change negative';
+                }
+            }
+        }
+        
+        // Update recent transactions
+        function updateRecentTransactions() {
+            const container = document.getElementById('recent-transactions-container');
+            
+            if (appData.allTransactions.length === 0) {
+                container.innerHTML = '<div class="no-data">No transactions found</div>';
+                return;
+            }
+            
+            // Get the 5 most recent transactions
+            const recentTransactions = [...appData.allTransactions]
+                .sort((a, b) => new Date(b.date || b.timestamp) - new Date(a.date || a.timestamp))
+                .slice(0, 5);
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentTransactions.map(transaction => `
+                            <tr>
+                                <td>${formatDate(transaction.date || transaction.timestamp)}</td>
+                                <td>${transaction.item || transaction.description || 'N/A'}</td>
+                                <td><span style="color: ${transaction.type === 'credit' ? 'var(--success)' : 'var(--danger)'}; font-weight: bold;">${transaction.type?.toUpperCase() || 'N/A'}</span></td>
+                                <td style="font-weight: bold; color: ${transaction.type === 'credit' ? 'var(--success)' : 'var(--danger)'}">
+                                    ${transaction.type === 'credit' ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount || 0))}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+        
+        // Load credit data
+        async function loadCreditData() {
+            const username = document.getElementById('creditUsernameInput').value.trim();
+            
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            // Show current user
+            document.getElementById('creditUsername').textContent = username;
+            document.getElementById('creditUserInfo').style.display = 'block';
+            
+            try {
+                const result = await apiCall('get_summary', { username: username });
+                
+                // Update the credit display
+                const creditAmount = parseFloat(result.totalCredit) || 0;
+                document.getElementById("creditTotalAmount").textContent = creditAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Load credit transactions
+                const transactionsResult = await apiCall('get_transactions', { username: username, type: 'credit' });
+                const creditTransactions = transactionsResult.transactions || [];
+                
+                const container = document.getElementById('creditTransactionsContainer');
+                
+                if (creditTransactions.length === 0) {
+                    container.innerHTML = '<div class="no-data">No credit transactions found for this user</div>';
+                    return;
+                }
+                
+                const table = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${creditTransactions.map(transaction => `
+                                <tr>
+                                    <td>${formatDate(transaction.date || transaction.timestamp)}</td>
+                                    <td>${transaction.item || transaction.description || 'N/A'}</td>
+                                    <td style="font-weight: bold; color: var(--success);">
+                                        ${formatCurrency(transaction.amount || 0)}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                container.innerHTML = table;
+                
+            } catch (error) {
+                document.getElementById('creditErrorMessage').innerHTML = `<div class="error-message">❌ Failed to load credit data: ${error.message}</div>`;
+                document.getElementById('creditErrorMessage').style.display = 'block';
+            }
+        }
+        
+        // Load debit data
+        async function loadDebitData() {
+            const username = document.getElementById('debitUsernameInput').value.trim();
+            
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            // Show current user
+            document.getElementById('debitUsername').textContent = username;
+            document.getElementById('debitUserInfo').style.display = 'block';
+            
+            try {
+                const result = await apiCall('get_summary', { username: username });
+                
+                // Update the debit display
+                const debitAmount = parseFloat(result.totalDebit) || 0;
+                document.getElementById("debitTotalAmount").textContent = debitAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Load debit transactions
+                const transactionsResult = await apiCall('get_transactions', { username: username, type: 'debit' });
+                const debitTransactions = transactionsResult.transactions || [];
+                
+                const container = document.getElementById('debitTransactionsContainer');
+                
+                if (debitTransactions.length === 0) {
+                    container.innerHTML = '<div class="no-data">No debit transactions found for this user</div>';
+                    return;
+                }
+                
+                const table = `
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Item</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${debitTransactions.map(transaction => `
+                                <tr>
+                                    <td>${formatDate(transaction.date || transaction.timestamp)}</td>
+                                    <td>${transaction.item || transaction.description || 'N/A'}</td>
+                                    <td style="font-weight: bold; color: var(--danger);">
+                                        ${formatCurrency(transaction.amount || 0)}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                container.innerHTML = table;
+                
+            } catch (error) {
+                document.getElementById('debitErrorMessage').innerHTML = `<div class="error-message">❌ Failed to load debit data: ${error.message}</div>`;
+                document.getElementById('debitErrorMessage').style.display = 'block';
+            }
+        }
+        
+        // Load transactions
+        async function loadTransactions() {
+            const loadingElement = document.getElementById('transactionsLoading');
+            const tableContainer = document.getElementById('transactionsTableContainer');
+            const errorElement = document.getElementById('transactionsError');
+            
+            // Show loading, hide table and error
+            loadingElement.style.display = 'flex';
+            tableContainer.style.display = 'none';
+            errorElement.style.display = 'none';
+            
+            try {
+                const result = await apiCall('get_all_transactions');
+                
+                // Store transactions globally
+                allTransactions = result.transactions || [];
+                
+                // Apply current filters
+                filterTransactions();
+                
+                // Hide loading, show table
+                loadingElement.style.display = 'none';
+                tableContainer.style.display = 'block';
+                
+            } catch (error) {
+                errorElement.innerHTML = `<div class="error-message">❌ Failed to load transactions: ${error.message}</div>`;
+                errorElement.style.display = 'block';
+                loadingElement.style.display = 'none';
+            }
+        }
+        
+        // Filter transactions
+        function filterTransactions() {
+            const typeFilter = document.getElementById('transactionTypeFilter').value;
+            const userFilter = document.getElementById('transactionUserFilter').value.toLowerCase().trim();
+            const dateFromFilter = document.getElementById('dateFromFilter').value;
+            const dateToFilter = document.getElementById('dateToFilter').value;
+            
+            // Apply filters
+            filteredTransactions = allTransactions.filter(transaction => {
+                // Type filter
+                if (typeFilter !== 'all' && transaction.type !== typeFilter) {
+                    return false;
+                }
+                
+                // User filter
+                if (userFilter && !transaction.username.toLowerCase().includes(userFilter)) {
+                    return false;
+                }
+                
+                // Date filters
+                const transactionDate = new Date(transaction.date || transaction.timestamp);
+                if (dateFromFilter && transactionDate < new Date(dateFromFilter)) {
+                    return false;
+                }
+                
+                if (dateToFilter && transactionDate > new Date(dateToFilter + 'T23:59:59')) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Reset to first page and render
+            currentPage = 1;
+            renderTransactionsTable();
+        }
+        
+        // Render transactions table
+        function renderTransactionsTable() {
+            const tableBody = document.getElementById('transactionsTableBody');
+            const paginationElement = document.getElementById('transactionsPagination');
+            
+            // Clear table
+            tableBody.innerHTML = '';
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+            const startIndex = (currentPage - 1) * transactionsPerPage;
+            const endIndex = Math.min(startIndex + transactionsPerPage, filteredTransactions.length);
+            const currentTransactions = filteredTransactions.slice(startIndex, endIndex);
+            
+            // Render transactions
+            if (currentTransactions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No transactions found</td></tr>';
+            } else {
+                currentTransactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    
+                    // Format date
+                    const formattedDate = formatDate(transaction.date || transaction.timestamp);
+                    
+                    // Create type badge
+                    const typeBadge = `<span class="transaction-type ${transaction.type}">${transaction.type}</span>`;
+                    
+                    // Format amount
+                    const amountClass = transaction.type === 'credit' ? 'credit' : 'debit';
+                    const formattedAmount = formatCurrency(Math.abs(transaction.amount || 0));
+                    
+                    row.innerHTML = `
+                        <td>${formattedDate}</td>
+                        <td>${transaction.username || 'N/A'}</td>
+                        <td><span style="color: ${transaction.type === 'credit' ? 'var(--success)' : 'var(--danger)'}; font-weight: bold;">${transaction.type?.toUpperCase() || 'N/A'}</span></td>
+                        <td>${transaction.item || transaction.description || 'N/A'}</td>
+                        <td style="font-weight: bold; color: ${transaction.type === 'credit' ? 'var(--success)' : 'var(--danger)'}">
+                            ${transaction.type === 'credit' ? '+' : '-'}${formattedAmount}
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            // Render pagination
+            renderPagination(totalPages, paginationElement);
+        }
+        
+        // Render pagination
+        function renderPagination(totalPages, container) {
+            container.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return; // No pagination needed
+            }
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Previous';
+            prevButton.disabled = currentPage === 1;
+            prevButton.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTransactionsTable();
+                }
+            };
+            container.appendChild(prevButton);
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = i === currentPage ? 'active' : '';
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    renderTransactionsTable();
+                };
+                container.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Next';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTransactionsTable();
+                }
+            };
+            container.appendChild(nextButton);
+        }
+        
+        // Toggle custom input
+        function toggleCustomInput(selectElement) {
+            const customInput = selectElement.nextElementSibling;
+            if (selectElement.value === 'custom') {
+                customInput.style.display = 'block';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.value = '';
+            }
+        }
+        
+        // Setup listeners for bulk row inputs
+        function setupBulkRowListeners(row) {
+            const inputs = row.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    checkRowAndAddNew(row);
+                });
+                input.addEventListener('change', function() {
+                    checkRowAndAddNew(row);
+                });
+            });
+        }
+        
+        // Check if row is complete and add new row if needed
+        function checkRowAndAddNew(currentRow) {
+            const adNo = currentRow.querySelector('.ad-no-input').value.trim();
+            const itemSelect = currentRow.querySelector('.item-select');
+            const customItem = currentRow.querySelector('.custom-item-input').value.trim();
+            const amount = currentRow.querySelector('.amount-input').value.trim();
+            
+            // Determine the item value
+            let itemValue = itemSelect.value;
+            if (itemValue === 'custom') {
+                itemValue = customItem;
+            }
+            
+            // Check if all required fields are filled
+            if (adNo && itemValue && amount) {
+                // Mark row as completed
+                currentRow.classList.add('completed');
+                
+                // Check if there's already an empty row below
+                const form = currentRow.parentElement;
+                const rows = form.querySelectorAll('.bulk-row');
+                const lastRow = rows[rows.length - 1];
+                
+                // If the last row is not empty or is the current row, add a new row
+                if (lastRow === currentRow || isRowFilled(lastRow)) {
+                    // Add new row with animation
+                    const newRow = addNewBulkRow(form);
+                    newRow.classList.add('new-row');
+                    
+                    // Remove the new-row class after animation
+                    setTimeout(() => {
+                        newRow.classList.remove('new-row');
+                    }, 1000);
+                }
+            } else {
+                // Remove completed class if row is no longer complete
+                currentRow.classList.remove('completed');
+            }
+        }
+        
+        // Check if a row is filled
+        function isRowFilled(row) {
+            const adNo = row.querySelector('.ad-no-input').value.trim();
+            const itemSelect = row.querySelector('.item-select');
+            const customItem = row.querySelector('.custom-item-input').value.trim();
+            const amount = row.querySelector('.amount-input').value.trim();
+            
+            let itemValue = itemSelect.value;
+            if (itemValue === 'custom') {
+                itemValue = customItem;
+            }
+            
+            return !!(adNo && itemValue && amount);
+        }
+        
+        // Add new bulk row
+        function addNewBulkRow(form) {
+            const newRow = document.createElement('div');
+            newRow.className = 'bulk-row';
+            
+            newRow.innerHTML = `
+                <input type="text" class="ad-no-input" placeholder="AD.NO">
+                <select class="item-select" onchange="toggleCustomInput(this)">
+                    <option value="">Select Item</option>
+                    <option value="item1">Item 1</option>
+                    <option value="item2">Item 2</option>
+                    <option value="item3">Item 3</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input type="text" class="custom-item-input" placeholder="Enter custom item">
+                <input type="number" class="amount-input" placeholder="Amount">
+                <button class="remove-btn" onclick="removeRow(this)">×</button>
+                <div class="auto-add-indicator">+</div>
+            `;
+            
+            form.appendChild(newRow);
+            
+            // Setup listeners for the new row
+            setupBulkRowListeners(newRow);
+            
+            // Focus on the first input of the new row
+            setTimeout(() => {
+                newRow.querySelector('.ad-no-input').focus();
+            }, 100);
+            
+            return newRow;
+        }
+        
+        // Add row to bulk form (manual button)
+        function addRow(formId) {
+            const form = document.getElementById(formId);
+            addNewBulkRow(form);
+        }
+        
+        // Remove row from bulk form
+        function removeRow(button) {
+            const row = button.parentElement;
+            const form = row.parentElement;
+            
+            // Don't remove the last row
+            if (form.children.length > 1) {
+                row.remove();
+            } else {
+                alert('At least one row is required');
+            }
+        }
+        
+        // Submit bulk transactions
+        async function submitBulk(type) {
+            const formId = type + 'BulkForm';
+            const messageId = type + 'BulkMessage';
+            const form = document.getElementById(formId);
+            const rows = form.querySelectorAll('.bulk-row');
+            
+            const transactions = [];
+            let isValid = true;
+            let hasFilledRow = false;
+            
+            rows.forEach(row => {
+                const adNo = row.querySelector('.ad-no-input').value.trim();
+                const itemSelect = row.querySelector('.item-select');
+                const customItem = row.querySelector('.custom-item-input').value.trim();
+                const amount = row.querySelector('.amount-input').value.trim();
+                
+                // Check if row has any filled fields
+                if (adNo || customItem || amount || (itemSelect.value && itemSelect.value !== '')) {
+                    hasFilledRow = true;
+                    
+                    // Determine the item value
+                    let itemValue = itemSelect.value;
+                    if (itemValue === 'custom') {
+                        itemValue = customItem;
+                    }
+                    
+                    // Validate
+                    if (!adNo || !itemValue || !amount) {
+                        isValid = false;
+                        row.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+                    } else {
+                        row.style.backgroundColor = '';
+                        transactions.push({
+                            adNo: adNo,
+                            item: itemValue,
+                            amount: parseFloat(amount)
+                        });
+                    }
+                }
+            });
+            
+            if (!hasFilledRow) {
+                showMessage(messageId, 'Please fill at least one row', 'error');
+                return;
+            }
+            
+            if (!isValid) {
+                showMessage(messageId, 'Please fill all fields in the filled rows', 'error');
+                return;
+            }
+            
+            if (transactions.length === 0) {
+                showMessage(messageId, 'No valid transactions to submit', 'error');
+                return;
+            }
+            
+            // Show loading message
+            showMessage(messageId, 'Submitting transactions...', 'info');
+            
+            try {
+                // Create a FormData object to properly send the data
+                const formData = new FormData();
+                formData.append('action', 'add_bulk_transactions');
+                formData.append('type', type);
+                formData.append('username', 'admin');
+                formData.append('transactions', JSON.stringify(transactions));
+                
+                // Send to server using POST method
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Clear form and reset to one empty row
+                    const form = document.getElementById(formId);
+                    form.innerHTML = `
+                        <div class="bulk-row">
+                            <input type="text" class="ad-no-input" placeholder="AD.NO">
+                            <select class="item-select" onchange="toggleCustomInput(this)">
+                                <option value="">Select Item</option>
+                                <option value="item1">Item 1</option>
+                                <option value="item2">Item 2</option>
+                                <option value="item3">Item 3</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <input type="text" class="custom-item-input" placeholder="Enter custom item">
+                            <input type="number" class="amount-input" placeholder="Amount">
+                            <button class="remove-btn" onclick="removeRow(this)">×</button>
+                            <div class="auto-add-indicator">+</div>
+                        </div>
+                    `;
+                    
+                    // Setup listeners for the new row
+                    setupBulkRowListeners(form.querySelector('.bulk-row'));
+                    
+                    showMessage(messageId, `Successfully submitted ${data.count || transactions.length} ${type} transactions`, 'success');
+                    
+                    // Refresh data
+                    refreshAllData();
+                } else {
+                    showMessage(messageId, `Error: ${data.error || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(messageId, `Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Show message
+        function showMessage(elementId, message, type) {
+            const messageElement = document.getElementById(elementId);
+            messageElement.textContent = message;
+            messageElement.className = `bulk-message ${type}`;
+            messageElement.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Show add money form
+        function showAddMoneyForm() {
+            document.getElementById('addMoneyForm').style.display = 'block';
+            document.getElementById('addDate').value = new Date().toISOString().split('T')[0];
+        }
+        
+        // Hide add money form
+        function hideAddMoneyForm() {
+            document.getElementById('addMoneyForm').style.display = 'none';
+        }
+        
+        // Add money
+        async function addMoney(event) {
+            event.preventDefault();
+            
+            const amount = document.getElementById('addAmount').value;
+            const description = document.getElementById('addDescription').value;
+            const date = document.getElementById('addDate').value;
+            
+            try {
+                const formData = new FormData();
+                formData.append('action', 'add_transaction');
+                formData.append('username', 'admin');
+                formData.append('type', 'credit');
+                formData.append('item', description);
+                formData.append('amount', amount);
+                formData.append('date', date);
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Money added successfully!');
+                    hideAddMoneyForm();
+                    refreshAllData();
+                } else {
+                    alert(`Error: ${data.error || 'Unknown error'}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+        
+        // Export functions
+        function exportOverallToPDF() {
+            try {
+                const creditAmount = document.getElementById('creditAmount').textContent;
+                const debitAmount = document.getElementById('debitAmount').textContent;
+                const balanceAmount = document.getElementById('balanceAmount').textContent;
+                
+                if (creditAmount === "Loading..." || creditAmount === "Error") {
+                    alert("Please load valid data before exporting.");
+                    return;
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Overall Financial Summary", 20, 30);
+                
+                // Add date
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated on: ${currentDate}`, 20, 45);
+                
+                // Draw line
+                doc.line(20, 50, 190, 50);
+                
+                // Summary data
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Financial Overview:", 20, 65);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Total Credit: ₹${creditAmount}`, 30, 80);
+                doc.text(`Total Debit: ₹${debitAmount}`, 30, 95);
+                doc.text(`Overall Balance: ₹${balanceAmount}`, 30, 110);
+                
+                // Balance status
+                const balance = parseFloat(balanceAmount.replace(/,/g, ''));
+                doc.setFontSize(12);
+                if (balance >= 0) {
+                    doc.setTextColor(0, 128, 0);
+                    doc.text("Status: Positive Balance ✓", 30, 125);
+                } else {
+                    doc.setTextColor(255, 0, 0);
+                    doc.text("Status: Negative Balance ⚠", 30, 125);
+                }
+                
+                // Reset color
+                doc.setTextColor(0, 0, 0);
+                
+                // Footer
+                doc.setFontSize(10);
+                doc.text("Generated by Union (Swahwa) Class Management", 20, 280);
+                doc.save(`Overall_Financial_Summary_${currentDate.replace(/\//g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                alert("Error generating PDF. Please try again.");
+            }
+        }
+        
+        function exportCreditToPDF() {
+            try {
+                const username = document.getElementById('creditUsername').textContent.trim();
+                const amount = document.getElementById('creditTotalAmount').textContent.trim();
+                
+                if (!username || amount === "0.00" || amount === "Error" || amount === "Loading...") {
+                    alert("Please load valid credit data before exporting.");
+                    return;
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Credit Summary Report", 20, 30);
+                
+                // Add date
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated on: ${currentDate}`, 20, 45);
+                
+                // Draw line
+                doc.line(20, 50, 190, 50);
+                
+                // User info
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text("User Information:", 20, 70);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Username: ${username}`, 30, 85);
+                
+                // Credit amount
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(0, 128, 0);
+                doc.text(`Total Credit: ₹${amount}`, 30, 110);
+                
+                // Reset color
+                doc.setTextColor(0, 0, 0);
+                
+                // Footer
+                doc.setFontSize(10);
+                doc.text("Generated by Union (Swahwa) Class Management", 20, 280);
+                doc.save(`Credit_Summary_${username}_${currentDate.replace(/\//g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                alert("Error generating PDF. Please try again.");
+            }
+        }
+        
+        function exportDebitToPDF() {
+            try {
+                const username = document.getElementById('debitUsername').textContent.trim();
+                const amount = document.getElementById('debitTotalAmount').textContent.trim();
+                
+                if (!username || amount === "0.00" || amount === "Error" || amount === "Loading...") {
+                    alert("Please load valid debit data before exporting.");
+                    return;
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Debit Summary Report", 20, 30);
+                
+                // Add date
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated on: ${currentDate}`, 20, 45);
+                
+                // Draw line
+                doc.line(20, 50, 190, 50);
+                
+                // User info
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text("User Information:", 20, 70);
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Username: ${username}`, 30, 85);
+                
+                // Debit amount
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(220, 20, 60);
+                doc.text(`Total Debit: ₹${amount}`, 30, 110);
+                
+                // Reset color
+                doc.setTextColor(0, 0, 0);
+                
+                // Footer
+                doc.setFontSize(10);
+                doc.text("Generated by Union (Swahwa) Class Management", 20, 280);
+                doc.save(`Debit_Summary_${username}_${currentDate.replace(/\//g, '-')}.pdf`);
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                alert("Error generating PDF. Please try again.");
+            }
+        }
+        
+        function exportTransactionsToPDF() {
+            try {
+                if (filteredTransactions.length === 0) {
+                    alert("No transactions to export. Please load transactions first.");
+                    return;
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const doc = new jsPDF();
+                
+                // Header
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.text("Transactions Report", 20, 30);
+                
+                // Add date and filters
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                const typeFilter = document.getElementById('transactionTypeFilter').value;
+                const userFilter = document.getElementById('transactionUserFilter').value;
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Generated on: ${currentDate}`, 20, 45);
+                
+                if (typeFilter !== 'all') {
+                    doc.text(`Filter: ${typeFilter} transactions`, 20, 55);
+                }
+                
+                if (userFilter) {
+                    doc.text(`User filter: ${userFilter}`, 20, 65);
+                }
+                
+                // Draw line
+                doc.line(20, 75, 190, 75);
+                
+                // Prepare table data
+                const tableData = filteredTransactions.map(transaction => {
+                    const date = new Date(transaction.date || transaction.timestamp);
+                    const formattedDate = date.toLocaleDateString('en-IN');
+                    const formattedAmount = formatCurrency(Math.abs(transaction.amount || 0));
+                    
+                    return [
+                        formattedDate,
+                        transaction.username || 'N/A',
+                        transaction.type?.toUpperCase() || 'N/A',
+                        transaction.item || transaction.description || 'N/A',
+                        `${transaction.type === 'credit' ? '+' : '-'}${formattedAmount}`
+                    ];
+                });
+                
+                // Add table using autotable
+                doc.autoTable({
+                    head: [['Date', 'Username', 'Type', 'Item', 'Amount']],
+                    body: tableData,
+                    startY: 85,
+                    styles: {
+                        fontSize: 10,
+                        cellPadding: 3
+                    },
+                    headStyles: {
+                        fillColor: [30, 58, 138],
+                        textColor: 255
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 25 },
+                        1: { cellWidth: 25 },
+                        2: { cellWidth: 20 },
+                        3: { cellWidth: 60 },
+                        4: { cellWidth: 30 }
+                    }
+                });
+                
+                // Footer
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Generated by Union (Swahwa) Class Management - Page ${i} of ${pageCount}`, 20, 280);
+                }
+                
+                // Save PDF
+                const filterText = typeFilter !== 'all' ? `_${typeFilter}` : '';
+                const userText = userFilter ? `_${userFilter}` : '';
+                doc.save(`Transactions_Report${filterText}${userText}_${currentDate.replace(/\//g, '-')}.pdf`);
+                
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                alert("Error generating PDF. Please try again.");
+            }
+        }
+        
+        // Utility functions
+        function formatDate(date) {
+            if (!date) return 'N/A';
+            return new Date(date).toLocaleString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount || 0);
+        }
+        
+        function showFAQs() {
+            alert('FAQs section will be available soon.');
+        }
+        
+        function showTutorials() {
+            alert('Video tutorials will be available soon.');
+        }
+    </script>
+</body>
+</html>
