@@ -1917,10 +1917,6 @@
             if (appData.loading) {
                 return;
             }
-            
-            appData.loading = true;
-            updateConnectionStatus('testing', '🔄 Loading data from your Google Apps Script...');
-            
             try {
                 // Load data in parallel
                 const [totalsResult, transactionsResult] = await Promise.all([
@@ -3037,3 +3033,4 @@
     </script>
 </body>
 </html>
+
